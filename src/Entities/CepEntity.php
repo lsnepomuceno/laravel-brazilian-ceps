@@ -7,14 +7,14 @@ use Illuminate\Contracts\Support\Arrayable;
 class CepEntity implements Arrayable
 {
     public function __construct(
-        protected string          $city,
-        protected string          $cep,
-        protected string          $street,
-        protected string          $state,
-        protected string          $uf,
-        protected string          $neighborhood,
-        protected string|int|null $number = null,
-        protected ?string         $complement = null
+        public string          $city,
+        public string          $cep,
+        public string          $street,
+        public string          $state,
+        public string          $uf,
+        public string          $neighborhood,
+        public string|int|null $number = null,
+        public ?string         $complement = null
     )
     {
     }
