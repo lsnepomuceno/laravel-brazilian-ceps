@@ -1,18 +1,23 @@
 <?php
 
-namespace App\Services\Cep\Providers;
+namespace LSNepomuceno\LaravelBrazilianCeps\CepProviders;
 
 use Exception;
 use Illuminate\Support\Facades\Http;
 use LSNepomuceno\LaravelBrazilianCeps\Entities\CepEntity;
 use LSNepomuceno\LaravelBrazilianCeps\Enums\State;
+use ReflectionException;
 
 class OpenCep extends BaseCepProvider
 {
     protected const BASE_URL = 'https://opencep.com/v1/';
 
+    /**
+     * @throws ReflectionException
+     */
     public function __construct()
     {
+        $this->setProviderName($this::class);
         $this->client = Http::baseUrl(self::BASE_URL);
     }
 

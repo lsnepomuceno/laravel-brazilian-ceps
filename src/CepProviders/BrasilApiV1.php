@@ -1,18 +1,23 @@
 <?php
 
-namespace App\Services\Cep\Providers;
+namespace LSNepomuceno\LaravelBrazilianCeps\CepProviders;
 
 use Exception;
 use Illuminate\Support\Facades\Http;
 use LSNepomuceno\LaravelBrazilianCeps\Entities\CepEntity;
 use LSNepomuceno\LaravelBrazilianCeps\Enums\State;
+use ReflectionException;
 
 class BrasilApiV1 extends BaseCepProvider
 {
     protected const BASE_URL = 'https://brasilapi.com.br/api/cep/v1/';
 
+    /**
+     * @throws ReflectionException
+     */
     public function __construct()
     {
+        $this->setProviderName($this::class);
         $this->client = Http::baseUrl(self::BASE_URL);
     }
 

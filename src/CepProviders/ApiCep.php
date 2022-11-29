@@ -1,18 +1,23 @@
 <?php
 
-namespace App\Services\Cep\Providers;
+namespace LSNepomuceno\LaravelBrazilianCeps\CepProviders;
 
 use Exception;
 use Illuminate\Support\Facades\Http;
 use LSNepomuceno\LaravelBrazilianCeps\Entities\CepEntity;
 use LSNepomuceno\LaravelBrazilianCeps\Enums\State;
+use ReflectionException;
 
 class ApiCep extends BaseCepProvider
 {
     protected const BASE_URL = 'https://cdn.apicep.com/file/apicep/';
 
+    /**
+     * @throws ReflectionException
+     */
     public function __construct()
     {
+        $this->setProviderName($this::class);
         $this->client = Http::baseUrl(self::BASE_URL);
     }
 
@@ -21,7 +26,6 @@ class ApiCep extends BaseCepProvider
      */
     public function get(string $cep): ?CepEntity
     {
-
         try {
             $data = $this->client->get("{$this->formatCep($cep, true)}.json")
                                  ->object();
