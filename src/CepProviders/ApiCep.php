@@ -5,7 +5,7 @@ namespace LSNepomuceno\LaravelBrazilianCeps\CepProviders;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use LSNepomuceno\LaravelBrazilianCeps\Entities\CepEntity;
-use LSNepomuceno\LaravelBrazilianCeps\Enums\State;
+use LSNepomuceno\LaravelBrazilianCeps\Enums\States;
 use ReflectionException;
 
 class ApiCep extends BaseCepProvider
@@ -40,7 +40,7 @@ class ApiCep extends BaseCepProvider
                 city        : $data->city,
                 cep         : $data->code,
                 street      : $data->address,
-                state       : State::get($data->state),
+                state       : States::get($data->state),
                 uf          : $data->state,
                 neighborhood: $data->district
             );

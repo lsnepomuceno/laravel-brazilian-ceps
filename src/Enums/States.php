@@ -4,7 +4,7 @@ namespace LSNepomuceno\LaravelBrazilianCeps\Enums;
 
 use Illuminate\Support\Str;
 
-enum State: string
+enum States: string
 {
     case AC = 'Acre';
     case AL = 'Alagoas';

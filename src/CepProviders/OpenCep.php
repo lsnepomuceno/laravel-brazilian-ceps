@@ -5,7 +5,7 @@ namespace LSNepomuceno\LaravelBrazilianCeps\CepProviders;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use LSNepomuceno\LaravelBrazilianCeps\Entities\CepEntity;
-use LSNepomuceno\LaravelBrazilianCeps\Enums\State;
+use LSNepomuceno\LaravelBrazilianCeps\Enums\States;
 use ReflectionException;
 
 class OpenCep extends BaseCepProvider
@@ -40,7 +40,7 @@ class OpenCep extends BaseCepProvider
                 city        : $data->localidade,
                 cep         : $data->cep,
                 street      : $data->logradouro,
-                state       : State::get($data->uf),
+                state       : States::get($data->uf),
                 uf          : $data->uf,
                 neighborhood: $data->bairro
             );
