@@ -2,18 +2,29 @@
 
 namespace LSNepomuceno\LaravelBrazilianCeps\Resources;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Resources\Json\JsonResource;
+use JsonSerializable;
+use LSNepomuceno\LaravelBrazilianCeps\Entities\CepEntity;
 
+/**
+ * @mixin CepEntity
+ */
 class CepResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-     */
-    public function toArray($request)
+    public function toArray($request): array|Arrayable|JsonSerializable
     {
-        return parent::toArray($request);
+        self::withoutWrapping();
+        
+        return [
+            'city'         => $this->city,
+            'cep'          => $this->cep,
+            'street'       => $this->street,
+            'state'        => $this->state,
+            'uf'           => $this->uf,
+            'neighborhood' => $this->neighborhood,
+            'number'       => $this->whenNotNull($this->number),
+            'complement'   => $this->whenNotNull($this->complement)
+        ];
     }
 }

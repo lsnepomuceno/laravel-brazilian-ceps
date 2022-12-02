@@ -60,5 +60,5 @@ return [
     |
     */
 
-    'api_consult_cep_route_not_found_message' => 'CEP não encontrado.'
+    'not_found_message' => 'CEP não encontrado.'
 ];
