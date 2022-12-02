@@ -30,7 +30,7 @@ class OpenCep extends BaseCepProvider
             $data = $this->client->get("{$this->formatCep($cep)}.json")
                                  ->object();
 
-            $this->originalProviderResponse = $data;
+            $this->setOriginalProviderResponse($data);
 
             if (!$data?->cep) {
                 return null;

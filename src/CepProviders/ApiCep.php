@@ -30,7 +30,7 @@ class ApiCep extends BaseCepProvider
             $data = $this->client->get("{$this->formatCep($cep, true)}.json")
                                  ->object();
 
-            $this->originalProviderResponse = $data;
+            $this->setOriginalProviderResponse($data);
 
             if (!$data?->code) {
                 return null;

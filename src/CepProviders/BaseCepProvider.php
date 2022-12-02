@@ -22,13 +22,23 @@ class BaseCepProvider
             : $cep;
     }
 
+    protected function setOriginalProviderResponse(array|object|null $data): void
+    {
+        $this->originalProviderResponse = !empty($data) ? $data : null;
+    }
+
+    public function getOriginalProviderResponse(): ?object
+    {
+        return $this->originalProviderResponse;
+    }
+
     /**
      * @throws ReflectionException
      */
     protected function setProviderName(string $className): void
     {
-        $reflectionClass           = new ReflectionClass($className);
-        $this->$this->providerName = $reflectionClass->getShortName();
+        $reflectionClass    = new ReflectionClass($className);
+        $this->providerName = $reflectionClass->getShortName();
     }
 
     public function getProviderName(): string

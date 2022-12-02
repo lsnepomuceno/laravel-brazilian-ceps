@@ -30,14 +30,14 @@ class CepLa extends BaseCepProvider
             $data = $this->client->get($this->formatCep($cep))
                                  ->object();
 
-            $this->originalProviderResponse = $data;
+            $this->setOriginalProviderResponse($data);
 
             if (!$data?->cep) {
                 return null;
             }
 
             return new CepEntity(
-                city        : $data->city,
+                city        : $data->cidade,
                 cep         : $data->cep,
                 street      : $data->logradouro,
                 state       : States::get($data->uf),

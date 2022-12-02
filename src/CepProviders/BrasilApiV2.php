@@ -30,7 +30,7 @@ class BrasilApiV2 extends BaseCepProvider
             $data = $this->client->get("{$this->formatCep($cep)}.json")
                                  ->object();
 
-            $this->originalProviderResponse = $data;
+            $this->setOriginalProviderResponse($data);
 
             if (!$data?->cep) {
                 return null;
@@ -38,7 +38,7 @@ class BrasilApiV2 extends BaseCepProvider
 
             return new CepEntity(
                 city        : $data->city,
-                cep         : $data->code,
+                cep         : $data->cep,
                 street      : $data->street,
                 state       : States::get($data->state),
                 uf          : $data->state,
