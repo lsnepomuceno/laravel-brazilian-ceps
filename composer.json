@@ -21,7 +21,8 @@
         "ext-fileinfo": "*",
         "ext-mbstring": "*",
         "illuminate/support": "^9",
-        "illuminate/http": "^9"
+        "illuminate/http": "^9",
+        "guzzlehttp/guzzle": "^7.5"
     },
     "autoload": {
         "psr-4": {
