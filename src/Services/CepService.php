@@ -10,6 +10,7 @@ use LSNepomuceno\LaravelBrazilianCeps\CepProviders\BrasilApiV2;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\CepLa;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\OpenCep;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\ViaCep;
+use Lsnepomuceno\LaravelBrazilianCeps\Contracts\ConsultableCEPProvider;
 use LSNepomuceno\LaravelBrazilianCeps\Entities\CepEntity;
 use LSNepomuceno\LaravelBrazilianCeps\Exceptions\CepNotFoundException;
 use LSNepomuceno\LaravelBrazilianCeps\Helpers\MaskHelper;
@@ -56,10 +57,13 @@ class CepService
     protected function processCep(string $cep): ?CepEntity
     {
         foreach ($this->cepApis as $cepApi) {
-            $this->when(
-                !$this->cepEntity?->cep,
-                fn() => $this->cepEntity = (new $cepApi)->get($cep)
-            );
+            $cepApiProvider = new $cepApi;
+            if ($cepApiProvider instanceof ConsultableCEPProvider) {
+                $this->when(
+                    !$this->cepEntity?->cep,
+                    fn() => $this->cepEntity = $cepApiProvider->get($cep)
+                );
+            }
         }
 
         $hasNotFoundExceptionEnabled = config(

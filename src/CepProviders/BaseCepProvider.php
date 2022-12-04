@@ -3,11 +3,12 @@
 namespace LSNepomuceno\LaravelBrazilianCeps\CepProviders;
 
 use Illuminate\Http\Client\PendingRequest;
+use LSNepomuceno\LaravelBrazilianCeps\Contracts\ConsultableCEPProvider;
 use LSNepomuceno\LaravelBrazilianCeps\Helpers\MaskHelper;
 use ReflectionClass;
 use ReflectionException;
 
-class BaseCepProvider
+abstract class BaseCepProvider implements ConsultableCEPProvider
 {
     protected PendingRequest $client;
     protected string         $providerName;
