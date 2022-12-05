@@ -1,35 +1,197 @@
-# laravel-brazilian-ceps
+<h1 align="center">Search addresses easily with Laravel Brazilian CEPs</h1>
 
-[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Travis](https://img.shields.io/travis/lsnepomuceno/laravel-brazilian-ceps.svg?style=flat-square)]()
-[![Total Downloads](https://img.shields.io/packagist/dt/lsnepomuceno/laravel-brazilian-ceps.svg?style=flat-square)](https://packagist.org/packages/lsnepomuceno/laravel-brazilian-ceps)
+<p align="center">
+  <a href="https://github.com/lsnepomuceno/laravel-brazilian-ceps/releases/latest">
+    <img src="http://poser.pugx.org/lsnepomuceno/laravel-brazilian-ceps/v" alt="Latest Stable Version">
+  </a>
+  <a href="https://packagist.org/packages/lsnepomuceno/laravel-brazilian-ceps/stats">
+    <img src="http://poser.pugx.org/lsnepomuceno/laravel-brazilian-ceps/downloads" alt="Total Downloads">
+  </a>
+  <a href="https://github.com/lsnepomuceno/laravel-brazilian-ceps/tree/dev">
+    <img src="http://poser.pugx.org/lsnepomuceno/laravel-brazilian-ceps/v/unstable" alt="Latest Unstable Version">
+  </a>
+  <a href="https://github.com/lsnepomuceno/laravel-brazilian-ceps/blob/main/LICENSE.md">
+    <img src="https://poser.pugx.org/lsnepomuceno/laravel-brazilian-ceps/license" alt="License">
+  </a>
+  <a href="https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/main_action.yml">
+    <img src="https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/action_pr_main.yml/badge.svg?branch=main" alt="Tests">
+  </a>
+</p>
 
-## Install
-`composer require lsnepomuceno/laravel-brazilian-ceps`
+# Minimum requirements
+* PHP: ^8.1
+* Laravel: 9 or newer
+* PHP Extensions: fileinfo, mbstring, json
 
-## Usage
-Write a few lines about the usage of this package.
+# Install
+Require this package in your composer.json and update composer. This will download the package and the dependencies libraries also.
 
-## Testing
-Run the tests with:
-
-``` bash
-vendor/bin/phpunit
+```Shell
+composer require lsnepomuceno/laravel-brazilian-ceps
 ```
 
-## Changelog
-Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
+Export the settings file using the command below
+```Shell
+php artisan vendor:publish --tag=brazilian-ceps
+```
 
-## Contributing
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
-## Credits
+# Usage
 
-- [lsnepomuceno](https://github.com/lsnepomuceno)
-- [All Contributors](https://github.com/lsnepomuceno/laravel-brazilian-ceps/contributors)
+## Using CepService:
+```PHP
+<?php
 
-## Security
-If you discover any security-related issues, please email lsn.nepomuceno@gmail.com instead of using the issue tracker.
+use LSNepomuceno\LaravelBrazilianCeps\Services\CepService;
+
+class ExampleController() {
+    // PHP 8: Constructor property promotion
+    public function __construct(protected CepService $cepService) { }
+    
+    
+    public function dummyFunction(string|int $cep){
+       $address = $this->cepService->get($cep);
+       
+       dd($address);
+    }
+}
+
+```
+
+### The returned value will have the structure below, see [CepEntity](https://github.com/lsnepomuceno/laravel-brazilian-ceps/blob/main/src/Entities/CepEntity.php):
+
+```PHP
+ LSNepomuceno\LaravelBrazilianCeps\Entities\CepEntity {
+    city: string,
+    cep: string,
+    street: string,
+    state: string,
+    uf: string,
+    neighborhood: string,
+    number: string | int | null,
+    complement: string | null,
+  }
+
+```
+#### :exclamation: By default, if the CEP is not found, the returned value will be *null*. If you need exception handling, the option can be enabled in the configuration file.
+
+
+```PHP
+// config/brazilian-ceps.php
+
+<?php
+  
+  'throw_not_found_exception' => true
+  
+```
+
+#### :exclamation: The initial middleware of the route is "guest", if it is necessary to modify it, just adjust the configuration file:
+
+```PHP
+// config/brazilian-ceps.php
+
+<?php
+  
+  'api_route_middleware' => ['guest]
+  
+```
+
+#### :exclamation: After setting the value of the "throw_not_found_exception" variable to true, remember to update your code:
+
+```PHP
+<?php
+
+use LSNepomuceno\LaravelBrazilianCeps\Services\CepService;
+use LSNepomuceno\LaravelBrazilianCeps\Exceptions\CepNotFoundException;
+
+class ExampleController() {
+    // PHP 8: Constructor property promotion
+    public function __construct(protected CepService $cepService) { }
+    
+    
+    public function dummyFunction(string|int $cep){
+       try {
+         $address = $this->cepService->get($cep);
+
+         dd($address);
+       } catch(CepNotFoundException $e) {
+          // TODO necessary
+       }
+    }
+}
+
+```
+
+<hr>
+
+## Route API
+##### By default, the package will provide an API route for looking up addresses, as specified below.
+
+<table>
+  <thead>
+    <tr>
+      <th>Verb</th>
+      <th>URI</th>
+      <th>Invokable Controller</th>
+      <th>Route Name</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td>GET</td>
+      <td>api/consult-cep/{cep}</td>
+      <td>LSNepomuceno\LaravelBrazilianCeps\Controllers\ConsultCepController</td>
+      <td>consult-cep.api</td>
+    </tr>
+  </tbody>
+</table>
+
+#### :exclamation: In some cases it may be necessary to deactivate this route, in which case just change the value of the "enable_api_consult_cep_route" configuration variable to false, as example below:
+
+```PHP
+// config/brazilian-ceps.php
+
+<?php
+  
+  'enable_api_consult_cep_route' => false
+  
+```
+
+#### :exclamation: You can also change the message if the CEP is not found:
+
+```PHP
+// config/brazilian-ceps.php
+
+<?php
+  
+  'not_found_message' => 'Type here the message you want.'
+  
+```
+
+<hr>
+
+## Cache Results
+
+#### By default, the results cache are cached and have a lifetime of 30 days, if you need to disable or change the lifetime, just update the configuration variables, as described below.
+
+```PHP
+// config/brazilian-ceps.php
+
+<?php
+  
+  'cache_results' => true,
+  
+  'cache_lifetime_in_days' => 30
+  
+```
+
+## Tests
+
+#### To ensure the delivery of data, several public providers are used, with this, the need to standardize and apply tests for better code quality was seen. About 70+ tests are included in the package.
+
+#### Tests can be verified through the badge [![tests badge](https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/action_pr_main.yml/badge.svg?branch=main)](https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/main_action.yml)
+
 
 ## License
 The MIT License (MIT). Please see [License File](/LICENSE.md) for more information.
