@@ -51,6 +51,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Api route middleware
+    |--------------------------------------------------------------------------
+    |
+    | This value defines which middlewares will provide access to the API route
+    | Default value: ['guest']
+    |
+    */
+
+    'api_route_middleware' => ['guest'],
+
+    /*
+    |--------------------------------------------------------------------------
     | Api consult cep route not found message
     |--------------------------------------------------------------------------
     |

@@ -24,6 +24,9 @@ class ConfigTest extends TestCase
         $this->assertArrayHasKey('enable_api_consult_cep_route', $configValues);
         $this->assertIsBool($configValues['enable_api_consult_cep_route']);
 
+        $this->assertArrayHasKey('api_route_middleware', $configValues);
+        $this->assertIsArray($configValues['api_route_middleware']);
+
         $this->assertArrayHasKey('not_found_message', $configValues);
         $this->assertIsString($configValues['not_found_message']);
     }
@@ -34,7 +37,7 @@ class ConfigTest extends TestCase
         $this->assertEquals(true, $configValues['cache_results']);
     }
 
-    public function testValidatesIf30AsDesfaultCacheLifetimeInDaysValue()
+    public function testValidatesIf_30AsDesfaultCacheLifetimeInDaysValue()
     {
         $configValues = config('brazilian-ceps');
         $this->assertEquals(30, $configValues['cache_lifetime_in_days']);
@@ -50,6 +53,12 @@ class ConfigTest extends TestCase
     {
         $configValues = config('brazilian-ceps');
         $this->assertEquals(true, $configValues['enable_api_consult_cep_route']);
+    }
+
+    public function testValidatesIfGuestADefaultApiRouteMiddlewareValue()
+    {
+        $configValues = config('brazilian-ceps');
+        $this->assertEquals(['guest'], $configValues['api_route_middleware']);
     }
 
     public function testValidatesIfCepNaoEncontradoAsDesfaultNotFoundMessageValue()
