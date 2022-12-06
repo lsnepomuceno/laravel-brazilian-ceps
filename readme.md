@@ -85,17 +85,6 @@ class ExampleController() {
   
 ```
 
-#### :exclamation: The initial middleware of the route is "guest", if it is necessary to modify it, just adjust the configuration file:
-
-```PHP
-// config/brazilian-ceps.php
-
-<?php
-  
-  'api_route_middleware' => ['guest]
-  
-```
-
 #### :exclamation: After setting the value of the "throw_not_found_exception" variable to true, remember to update your code:
 
 ```PHP
@@ -166,6 +155,17 @@ class ExampleController() {
 <?php
   
   'not_found_message' => 'Type here the message you want.'
+  
+```
+
+#### :exclamation: The initial middleware of the route is "guest", if it is necessary to modify it, just adjust the configuration file:
+
+```PHP
+// config/brazilian-ceps.php
+
+<?php
+  
+  'api_route_middleware' => ['guest']
   
 ```
 
