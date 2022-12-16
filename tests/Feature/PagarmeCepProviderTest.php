@@ -3,17 +3,17 @@
 namespace LSNepomuceno\LaravelBrazilianCeps\Tests\Feature;
 
 use Exception;
-use LSNepomuceno\LaravelBrazilianCeps\CepProviders\ViaCep;
+use LSNepomuceno\LaravelBrazilianCeps\CepProviders\Pagarme;
 use LSNepomuceno\LaravelBrazilianCeps\Entities\CepEntity;
 use LSNepomuceno\LaravelBrazilianCeps\Tests\Helpers\DefaultValues;
 use LSNepomuceno\LaravelBrazilianCeps\Tests\TestCase;
 
-class ViaCepProviderTest extends TestCase
+class PagarmeCepProviderTest extends TestCase
 {
     public function testValidatesCepProviderName()
     {
-        $apiCepProvider = new ViaCep();
-        $this->assertEquals('ViaCep', $apiCepProvider->getProviderName());
+        $apiCepProvider = new Pagarme();
+        $this->assertEquals('Pagarme', $apiCepProvider->getProviderName());
     }
 
     /**
@@ -22,17 +22,17 @@ class ViaCepProviderTest extends TestCase
     public function testValidatesOriginalResponseStructure()
     {
         $cep            = '29018-210';
-        $apiCepProvider = new ViaCep();
+        $apiCepProvider = new Pagarme();
         $apiCepProvider->get($cep);
 
         $originalProviderResponse = $apiCepProvider->getOriginalProviderResponse();
 
         $requiredFields = [
-            'cep',
-            'uf',
-            'localidade',
-            'bairro',
-            'logradouro'
+            'zipcode',
+            'state',
+            'city',
+            'neighborhood',
+            'street'
         ];
 
         foreach ($requiredFields as $field) {
@@ -48,7 +48,7 @@ class ViaCepProviderTest extends TestCase
     public function testValidatesIfTheRequestWillBeExecutedSuccessfully()
     {
         $cep            = '29018-210';
-        $apiCepProvider = new ViaCep();
+        $apiCepProvider = new Pagarme();
         $response       = $apiCepProvider->get($cep);
 
         $requiredFields = DefaultValues::successfullyRequiredFields();
@@ -75,7 +75,7 @@ class ViaCepProviderTest extends TestCase
     public function testValidatesWhenAnInvalidZipCepIsReceived()
     {
         $cep            = '66666666';
-        $apiCepProvider = new ViaCep();
+        $apiCepProvider = new Pagarme();
         $response       = $apiCepProvider->get($cep);
 
         $this->assertNull($response);
