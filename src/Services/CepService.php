@@ -10,6 +10,7 @@ use LSNepomuceno\LaravelBrazilianCeps\CepProviders\BrasilApiV2;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\CepLa;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\OpenCep;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\Pagarme;
+use LSNepomuceno\LaravelBrazilianCeps\CepProviders\Postomon;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\ViaCep;
 use Lsnepomuceno\LaravelBrazilianCeps\Contracts\ConsultableCEPProvider;
 use LSNepomuceno\LaravelBrazilianCeps\Entities\CepEntity;
@@ -28,6 +29,7 @@ class CepService
             OpenCep::class,
             ApiCep::class,
             CepLa::class,
+            Postomon::class,
             BrasilApiV1::class,
             BrasilApiV2::class
         ]

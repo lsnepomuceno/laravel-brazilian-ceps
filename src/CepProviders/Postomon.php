@@ -8,9 +8,9 @@ use LSNepomuceno\LaravelBrazilianCeps\Entities\CepEntity;
 use LSNepomuceno\LaravelBrazilianCeps\Enums\States;
 use ReflectionException;
 
-class Pagarme extends BaseCepProvider
+class Postomon extends BaseCepProvider
 {
-    protected const BASE_URL = 'https://api.pagar.me/1/zipcodes/';
+    protected const BASE_URL = 'https://api.postmon.com.br/v1/cep/';
 
     /**
      * @throws ReflectionException
@@ -31,17 +31,17 @@ class Pagarme extends BaseCepProvider
 
             $this->setOriginalProviderResponse($data);
 
-            if (!$data?->zipcode) {
+            if (!$data?->cep) {
                 return null;
             }
 
             return new CepEntity(
-                city        : $data->city,
-                cep         : $data->zipcode,
-                street      : $data->street,
-                state       : States::get($data->state),
-                uf          : $data->state,
-                neighborhood: $data->neighborhood
+                city        : $data->cidade,
+                cep         : $data->cep,
+                street      : $data->logradouro,
+                state       : States::get($data->estado),
+                uf          : $data->estado,
+                neighborhood: $data->bairro
             );
         } catch (Exception $e) {
             return null;
