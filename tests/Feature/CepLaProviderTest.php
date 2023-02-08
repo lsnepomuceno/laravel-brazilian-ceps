@@ -37,7 +37,7 @@ class CepLaProviderTest extends TestCase
 
         foreach ($requiredFields as $field) {
             $this->assertNotEmpty($field);
-            $this->assertObjectHasAttribute($field, $originalProviderResponse);
+            $this->assertArrayHasKey($field, (array) $originalProviderResponse);
         }
     }
 
@@ -60,12 +60,12 @@ class CepLaProviderTest extends TestCase
 
         foreach ($requiredFields as $field) {
             $this->assertNotEmpty($field);
-            $this->assertObjectHasAttribute($field, $response);
+            $this->assertArrayHasKey($field, (array) $response);
         }
 
         foreach ($optionalFields as $field) {
             $this->isNull($field);
-            $this->assertObjectHasAttribute($field, $response);
+            $this->assertArrayHasKey($field, (array) $response);
         }
     }
 
