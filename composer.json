@@ -35,7 +35,7 @@
         }
     },
     "scripts": {
-        "test": "vendor/bin/phpunit"
+        "test": "vendor/bin/testbench package:test"
     },
     "extra": {
         "laravel": {
@@ -44,8 +44,11 @@
             ]
         }
     },
+    "suggest": {
+        "lsnepomuceno/laravel-a1-pdf-sign": "Sign PDF files with valid x509 certificates."
+    },
     "require-dev": {
-        "orchestra/testbench": "^7",
-        "nunomaduro/collision": "^6"
+        "orchestra/testbench": "^8",
+        "nunomaduro/collision": "^7"
     }
 }
