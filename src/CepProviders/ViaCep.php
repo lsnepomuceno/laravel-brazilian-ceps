@@ -42,7 +42,8 @@ class ViaCep extends BaseCepProvider
                 street      : $data->logradouro,
                 state       : States::get($data->uf),
                 uf          : $data->uf,
-                neighborhood: $data->bairro
+                neighborhood: $data->bairro,
+                ibge        : $data->ibge
             );
         } catch (Exception $e) {
             return null;

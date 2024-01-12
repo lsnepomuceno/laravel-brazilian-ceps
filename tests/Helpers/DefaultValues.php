@@ -19,7 +19,8 @@ class DefaultValues
     {
         return [
             'number',
-            'complement'
+            'complement',
+            'ibge'
         ];
     }
 }
