@@ -51,6 +51,12 @@ class ApiCepProviderTest extends TestCase
         $apiCepProvider = new ApiCep();
         $response       = $apiCepProvider->get($cep);
 
+        if (!$response) {
+            $this->markTestSkipped(
+                'APICep provider unavailable.'
+            );
+        }
+
         $requiredFields = DefaultValues::successfullyRequiredFields();
         $optionalFields = DefaultValues::optionalFields();
 
