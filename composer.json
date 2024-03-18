@@ -20,9 +20,9 @@
         "ext-json": "*",
         "ext-fileinfo": "*",
         "ext-mbstring": "*",
-        "illuminate/support": "^9 || ^10",
-        "illuminate/http": "^9 || ^10",
-        "guzzlehttp/guzzle": "^7.5"
+        "illuminate/support": "^9 || ^10 || ^11",
+        "illuminate/http": "^9 || ^10 || ^11",
+        "guzzlehttp/guzzle": "^7"
     },
     "autoload": {
         "psr-4": {
@@ -48,7 +48,7 @@
         "lsnepomuceno/laravel-a1-pdf-sign": "Sign PDF files with valid x509 certificates."
     },
     "require-dev": {
-        "orchestra/testbench": "^8",
-        "nunomaduro/collision": "^7"
+        "orchestra/testbench": "^7 || ^8 || ^9",
+        "nunomaduro/collision": "^6 || ^7 || ^8"
     }
 }
