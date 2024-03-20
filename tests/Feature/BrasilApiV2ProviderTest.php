@@ -10,6 +10,13 @@ use LSNepomuceno\LaravelBrazilianCeps\Tests\TestCase;
 
 class BrasilApiV2ProviderTest extends TestCase
 {
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->markTestSkipped('BrasilAPI V2 provider unavailable.');
+    }
+
     public function testValidatesCepProviderName()
     {
         $apiCepProvider = new BrasilApiV2();
