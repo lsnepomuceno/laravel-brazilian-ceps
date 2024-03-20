@@ -43,7 +43,6 @@ class ViaCepProviderTest extends TestCase
 
     /**
      * @throws Exception
-     * @depends testValidatesOriginalResponseStructure
      */
     public function testValidatesIfTheRequestWillBeExecutedSuccessfully()
     {
