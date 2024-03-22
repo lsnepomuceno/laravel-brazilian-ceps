@@ -3,22 +3,24 @@
 namespace LSNepomuceno\LaravelBrazilianCeps\Tests\Feature;
 
 use Exception;
+use Illuminate\Support\Facades\Http;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\BrasilApiV1;
 use LSNepomuceno\LaravelBrazilianCeps\Entities\CepEntity;
-use LSNepomuceno\LaravelBrazilianCeps\Tests\Helpers\DefaultValues;
 use LSNepomuceno\LaravelBrazilianCeps\Tests\TestCase;
 
 class BrasilApiV1ProviderTest extends TestCase
 {
+    private const BASE_URL = 'brasilapi.com.br/api/cep/v1/';
+
     public function setUp(): void
     {
         parent::setUp();
-        $this->markTestSkipped('BrasilAPI V1 provider unavailable.');
     }
 
     public function testValidatesCepProviderName()
     {
         $apiCepProvider = new BrasilApiV1();
+
         $this->assertEquals('BrasilApiV1', $apiCepProvider->getProviderName());
     }
 
@@ -27,19 +29,64 @@ class BrasilApiV1ProviderTest extends TestCase
      */
     public function testValidatesOriginalResponseStructure()
     {
-        $cep            = '29018-210';
+        #arrange
+        $this->mockResponseSuccess();
         $apiCepProvider = new BrasilApiV1();
-        $apiCepProvider->get($cep);
+
+
+        #act
+        $response = $apiCepProvider->get('12345678');
 
         $originalProviderResponse = $apiCepProvider->getOriginalProviderResponse();
+        #assert
+        $this->assertInstanceOf(CepEntity::class, $response);
+        $this->assertNotEmpty($originalProviderResponse);
+        $this->fieldsValidity($originalProviderResponse);
+    }
 
-        $requiredFields = [
-            'cep',
-            'state',
-            'city',
-            'neighborhood',
-            'street'
+    /**
+     * @throws Exception
+     */
+    public function testValidatesOriginalResponseStructureError()
+    {
+        #arrange
+        $this->mockResponseError();
+        $apiCepProvider = new BrasilApiV1();
+
+        #act
+        $response = $apiCepProvider->get('12345678');
+        $originalProviderResponse = $apiCepProvider->getOriginalProviderResponse();
+
+        #assert
+        $this->assertNull($response);
+        $this->assertNull($originalProviderResponse);
+    }
+
+    private function mockResponseSuccess(): void
+    {
+        $mockResponse = [
+            "city" => "Sao Paulo",
+            "cep" => "12345678",
+            "street" => "R. Morgado de Mateus",
+            "state" => "SP",
+            "neighborhood" => "Vila Mariana",
         ];
+
+        Http::fake([
+            self::BASE_URL . '*' => Http::response($mockResponse, 200)
+        ]);
+    }
+
+    private function mockResponseError(): void
+    {
+        Http::fake([
+            self::BASE_URL . '*' => Http::response(null, 500)
+        ]);
+    }
+
+    private function fieldsValidity($originalProviderResponse): void
+    {
+        $requiredFields = ['cep', 'state', 'city', 'neighborhood', 'street'];
 
         foreach ($requiredFields as $field) {
             $this->assertNotEmpty($field);
@@ -50,38 +97,12 @@ class BrasilApiV1ProviderTest extends TestCase
     /**
      * @throws Exception
      */
-    public function testValidatesIfTheRequestWillBeExecutedSuccessfully()
-    {
-        $cep            = '29018-210';
-        $apiCepProvider = new BrasilApiV1();
-        $response       = $apiCepProvider->get($cep);
-
-        $requiredFields = DefaultValues::successfullyRequiredFields();
-        $optionalFields = DefaultValues::optionalFields();
-
-        $this->assertIsObject($response);
-
-        $this->assertInstanceOf(CepEntity::class, $response);
-
-        foreach ($requiredFields as $field) {
-            $this->assertNotEmpty($field);
-            $this->assertArrayHasKey($field, (array) $response);
-        }
-
-        foreach ($optionalFields as $field) {
-            $this->isNull($field);
-            $this->assertArrayHasKey($field, (array) $response);
-        }
-    }
-
-    /**
-     * @throws Exception
-     */
     public function testValidatesWhenAnInvalidZipCepIsReceived()
     {
-        $cep            = '66666666';
         $apiCepProvider = new BrasilApiV1();
-        $response       = $apiCepProvider->get($cep);
+
+        $cep = '66666666';
+        $response = $apiCepProvider->get($cep);
 
         $this->assertNull($response);
     }
