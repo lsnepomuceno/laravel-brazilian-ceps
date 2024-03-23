@@ -37,7 +37,7 @@ class ApiCepProviderTest extends TestCase
 
         foreach ($requiredFields as $field) {
             $this->assertNotEmpty($field);
-            $this->assertObjectHasAttribute($field, $originalProviderResponse);
+            $this->assertArrayHasKey($field, (array) $originalProviderResponse);
         }
     }
 
@@ -51,6 +51,12 @@ class ApiCepProviderTest extends TestCase
         $apiCepProvider = new ApiCep();
         $response       = $apiCepProvider->get($cep);
 
+        if (!$response) {
+            $this->markTestSkipped(
+                'APICep provider unavailable.'
+            );
+        }
+
         $requiredFields = DefaultValues::successfullyRequiredFields();
         $optionalFields = DefaultValues::optionalFields();
 
@@ -60,12 +66,12 @@ class ApiCepProviderTest extends TestCase
 
         foreach ($requiredFields as $field) {
             $this->assertNotEmpty($field);
-            $this->assertObjectHasAttribute($field, $response);
+            $this->assertArrayHasKey($field, (array) $response);
         }
 
         foreach ($optionalFields as $field) {
             $this->isNull($field);
-            $this->assertObjectHasAttribute($field, $response);
+            $this->assertArrayHasKey($field, (array) $response);
         }
     }
 

@@ -14,7 +14,8 @@ class CepEntity implements Arrayable
         public string          $uf,
         public string          $neighborhood,
         public string|int|null $number = null,
-        public ?string         $complement = null
+        public ?string         $complement = null,
+        public string|int|null $ibge = null
     )
     {
     }

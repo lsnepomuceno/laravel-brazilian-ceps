@@ -17,7 +17,8 @@ class CepEntityTest extends TestCase
             uf          : 'uf',
             neighborhood: 'neighborhood',
             number      : 'number',
-            complement  : 'complement'
+            complement  : 'complement',
+            ibge        : 'ibge'
         );
 
         $this->assertIsArray($cepEntity->toArray());
@@ -33,7 +34,8 @@ class CepEntityTest extends TestCase
             uf          : 'uf',
             neighborhood: 'neighborhood',
             number      : 1000,
-            complement  : 'complement'
+            complement  : 'complement',
+            ibge        : 'ibge'
         );
 
         $this->assertIsArray($cepEntity->toArray());
@@ -49,7 +51,8 @@ class CepEntityTest extends TestCase
             uf          : 'uf',
             neighborhood: 'neighborhood',
             number      : null,
-            complement  : null
+            complement  : null,
+            ibge        : null
         );
 
         $this->assertIsArray($cepEntity->toArray());

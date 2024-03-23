@@ -41,7 +41,8 @@ class Postomon extends BaseCepProvider
                 street      : $data->logradouro,
                 state       : States::get($data->estado),
                 uf          : $data->estado,
-                neighborhood: $data->bairro
+                neighborhood: $data->bairro,
+                ibge        : $data->cidade_info?->codigo_ibge
             );
         } catch (Exception $e) {
             return null;

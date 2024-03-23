@@ -7,7 +7,6 @@ use Illuminate\Support\Traits\Conditionable;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\ApiCep;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\BrasilApiV1;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\BrasilApiV2;
-use LSNepomuceno\LaravelBrazilianCeps\CepProviders\CepLa;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\OpenCep;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\Pagarme;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\Postomon;
@@ -28,7 +27,6 @@ class CepService
             Pagarme::class,
             OpenCep::class,
             ApiCep::class,
-            CepLa::class,
             Postomon::class,
             BrasilApiV1::class,
             BrasilApiV2::class
