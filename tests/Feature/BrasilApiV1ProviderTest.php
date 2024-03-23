@@ -35,7 +35,7 @@ class BrasilApiV1ProviderTest extends HttpTestCase
         ];
 
         Http::fake([
-            "{$this->cepProvider->getBaseUrl()}*.json" => Http::response($mockResponse, 200)
+            "{$this->cepProvider->getBaseUrl()}*" => Http::response($mockResponse, 200)
         ]);
     }
 
