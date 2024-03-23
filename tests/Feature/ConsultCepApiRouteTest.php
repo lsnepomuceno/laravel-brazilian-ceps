@@ -19,9 +19,6 @@ class ConsultCepApiRouteTest extends TestCase
         $this->assertNotEmpty($consultCepRoute);
     }
 
-    /**
-     * @depends testValidatesIfTheCepsQueryRouteIsAccessible
-     */
     public function testValidateTheReturnStructureOfTheRouteOnSuccess()
     {
         $response = $this->get('api/consult-cep/29018210');
@@ -32,9 +29,6 @@ class ConsultCepApiRouteTest extends TestCase
         );
     }
 
-    /**
-     * @depends testValidatesIfTheCepsQueryRouteIsAccessible
-     */
     public function testValidateTheReturnStructureOfTheRouteOnFailure()
     {
         $cepNotFoundMessage = config('brazilian-ceps.not_found_message');
