@@ -23,7 +23,7 @@ class HttpTestCase extends TestCase
         ]);
     }
 
-    protected function setupErrorResponse(string $baseUrl): void
+    protected function mockErrorResponse(string $baseUrl): void
     {
         Http::fake([
             '*' => Http::response(status: 500)

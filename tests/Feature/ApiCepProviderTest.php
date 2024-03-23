@@ -3,17 +3,40 @@
 namespace LSNepomuceno\LaravelBrazilianCeps\Tests\Feature;
 
 use Exception;
+use Illuminate\Support\Facades\Http;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\ApiCep;
 use LSNepomuceno\LaravelBrazilianCeps\Entities\CepEntity;
-use LSNepomuceno\LaravelBrazilianCeps\Tests\Helpers\DefaultValues;
-use LSNepomuceno\LaravelBrazilianCeps\Tests\TestCase;
+use LSNepomuceno\LaravelBrazilianCeps\Tests\HttpTestCase;
 
-class ApiCepProviderTest extends TestCase
+class ApiCepProviderTest extends HttpTestCase
 {
+    protected ApiCep $cepProvider;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->cepProvider = new ApiCep();
+    }
+
     public function testValidatesCepProviderName()
     {
-        $apiCepProvider = new ApiCep();
-        $this->assertEquals('ApiCep', $apiCepProvider->getProviderName());
+        $cepProvider = new ApiCep();
+        $this->assertEquals('ApiCep', $cepProvider->getProviderName());
+    }
+
+    private function mockResponseSuccess(): void
+    {
+        $mockResponse = [
+            'city' => $this->faker->city(),
+            'code' => $this->faker->postcode(),
+            'address' => $this->faker->streetName(),
+            'state' => $this->faker->stateAbbr(),
+            'district' => $this->faker->name()
+        ];
+
+        Http::fake([
+            "{$this->cepProvider->getBaseUrl()}*.json" => Http::response($mockResponse, 200)
+        ]);
     }
 
     /**
@@ -21,24 +44,13 @@ class ApiCepProviderTest extends TestCase
      */
     public function testValidatesOriginalResponseStructure()
     {
-        $cep            = '29018-210';
-        $apiCepProvider = new ApiCep();
-        $apiCepProvider->get($cep);
+        $this->mockResponseSuccess();
 
-        $originalProviderResponse = $apiCepProvider->getOriginalProviderResponse();
-
-        $requiredFields = [
-            'code',
-            'state',
-            'city',
-            'district',
-            'address'
-        ];
-
-        foreach ($requiredFields as $field) {
-            $this->assertNotEmpty($field);
-            $this->assertArrayHasKey($field, (array) $originalProviderResponse);
-        }
+        $cepProvider = new ApiCep();
+        $response = $cepProvider->get($this->faker->postcode());
+        $originalProviderResponse = $cepProvider->getOriginalProviderResponse();
+        $this->assertInstanceOf(CepEntity::class, $response);
+        $this->assertNotEmpty($originalProviderResponse);
     }
 
     /**
@@ -46,32 +58,30 @@ class ApiCepProviderTest extends TestCase
      */
     public function testValidatesIfTheRequestWillBeExecutedSuccessfully()
     {
-        $cep            = '29018-210';
-        $apiCepProvider = new ApiCep();
-        $response       = $apiCepProvider->get($cep);
+        $this->mockResponseSuccess();
 
-        if (!$response) {
-            $this->markTestSkipped(
-                'APICep provider unavailable.'
-            );
-        }
-
-        $requiredFields = DefaultValues::successfullyRequiredFields();
-        $optionalFields = DefaultValues::optionalFields();
+        $cepProvider = new ApiCep();
+        $response = $cepProvider->get($this->faker->postcode());
 
         $this->assertIsObject($response);
-
         $this->assertInstanceOf(CepEntity::class, $response);
+        $this->assertRequiredFields($response);
+        $this->assertOptionalFields($response);
+    }
 
-        foreach ($requiredFields as $field) {
-            $this->assertNotEmpty($field);
-            $this->assertArrayHasKey($field, (array) $response);
-        }
+    /**
+     * @throws Exception
+     */
+    public function testValidatesOriginalResponseStructureError()
+    {
+        $this->mockErrorResponse($this->cepProvider->getBaseUrl());
+        $cepProvider = new ApiCep();
 
-        foreach ($optionalFields as $field) {
-            $this->isNull($field);
-            $this->assertArrayHasKey($field, (array) $response);
-        }
+        $response = $cepProvider->get('12345678');
+        $originalProviderResponse = $cepProvider->getOriginalProviderResponse();
+
+        $this->assertNull($response);
+        $this->assertNull($originalProviderResponse);
     }
 
     /**
@@ -79,9 +89,9 @@ class ApiCepProviderTest extends TestCase
      */
     public function testValidatesWhenAnInvalidZipCepIsReceived()
     {
-        $cep            = '66666666';
-        $apiCepProvider = new ApiCep();
-        $response       = $apiCepProvider->get($cep);
+        $cep = '66666666';
+        $cepProvider = new ApiCep();
+        $response = $cepProvider->get($cep);
 
         $this->assertNull($response);
     }
