@@ -16,13 +16,13 @@ jobs:
       fail-fast: false
       matrix:
         operating-system: [ ubuntu-latest ]
-        php-versions: [ '8.2', '8.3' ]
+        php-versions: [ '8.2' ]
         laravel: [ '11.*' ]
         include:
           - laravel:  11.*
             testbench: 9.*
     env:
-      extensions: mbstring, dom, fileinfo, openssl, json, imagick, swoole, sqlite3
+      extensions: mbstring, dom, fileinfo, openssl, json, imagick, swoole, sqlite3, sqlite
       key: cache-v5
     name: PHP ${{ matrix.php-versions }} - Laravel ${{ matrix.laravel }} - ${{ matrix.operating-system}}
     steps:
