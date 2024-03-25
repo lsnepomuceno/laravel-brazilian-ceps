@@ -3,17 +3,41 @@
 namespace LSNepomuceno\LaravelBrazilianCeps\Tests\Feature;
 
 use Exception;
+use Illuminate\Support\Facades\Http;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\ViaCep;
 use LSNepomuceno\LaravelBrazilianCeps\Entities\CepEntity;
-use LSNepomuceno\LaravelBrazilianCeps\Tests\Helpers\DefaultValues;
-use LSNepomuceno\LaravelBrazilianCeps\Tests\TestCase;
+use LSNepomuceno\LaravelBrazilianCeps\Tests\HttpTestCase;
 
-class ViaCepProviderTest extends TestCase
+class ViaCepProviderTest extends HttpTestCase
 {
+    protected ViaCep $cepProvider;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->cepProvider = new ViaCep();
+    }
+
     public function testValidatesCepProviderName()
     {
-        $apiCepProvider = new ViaCep();
-        $this->assertEquals('ViaCep', $apiCepProvider->getProviderName());
+        $cepProvider = new ViaCep();
+        $this->assertEquals('ViaCep', $cepProvider->getProviderName());
+    }
+
+    private function mockResponseSuccess(): void
+    {
+        $mockResponse = [
+            'localidade' => $this->faker->city(),
+            'cep' => $this->faker->postcode(),
+            'logradouro' => $this->faker->streetName(),
+            'uf' => $this->faker->stateAbbr(),
+            'bairro' => $this->faker->name(),
+            'ibge' => $this->faker->numerify('######')
+        ];
+
+        Http::fake([
+            "{$this->cepProvider->getBaseUrl()}*" => Http::response($mockResponse, 200)
+        ]);
     }
 
     /**
@@ -21,52 +45,44 @@ class ViaCepProviderTest extends TestCase
      */
     public function testValidatesOriginalResponseStructure()
     {
-        $cep            = '29018-210';
-        $apiCepProvider = new ViaCep();
-        $apiCepProvider->get($cep);
+        $this->mockResponseSuccess();
 
-        $originalProviderResponse = $apiCepProvider->getOriginalProviderResponse();
-
-        $requiredFields = [
-            'cep',
-            'uf',
-            'localidade',
-            'bairro',
-            'logradouro'
-        ];
-
-        foreach ($requiredFields as $field) {
-            $this->assertNotEmpty($field);
-            $this->assertArrayHasKey($field, (array) $originalProviderResponse);
-        }
+        $cepProvider = new ViaCep();
+        $response = $cepProvider->get($this->faker->postcode());
+        $originalProviderResponse = $cepProvider->getOriginalProviderResponse();
+        $this->assertInstanceOf(CepEntity::class, $response);
+        $this->assertNotEmpty($originalProviderResponse);
     }
 
     /**
      * @throws Exception
-     * @depends testValidatesOriginalResponseStructure
      */
     public function testValidatesIfTheRequestWillBeExecutedSuccessfully()
     {
-        $cep            = '29018-210';
-        $apiCepProvider = new ViaCep();
-        $response       = $apiCepProvider->get($cep);
+        $this->mockResponseSuccess();
 
-        $requiredFields = DefaultValues::successfullyRequiredFields();
-        $optionalFields = DefaultValues::optionalFields();
+        $cepProvider = new ViaCep();
+        $response = $cepProvider->get($this->faker->postcode());
 
         $this->assertIsObject($response);
-
         $this->assertInstanceOf(CepEntity::class, $response);
+        $this->assertRequiredFields($response);
+        $this->assertOptionalFields($response);
+    }
 
-        foreach ($requiredFields as $field) {
-            $this->assertNotEmpty($field);
-            $this->assertArrayHasKey($field, (array) $response);
-        }
+    /**
+     * @throws Exception
+     */
+    public function testValidatesOriginalResponseStructureError()
+    {
+        $this->mockErrorResponse($this->cepProvider->getBaseUrl());
+        $cepProvider = new ViaCep();
 
-        foreach ($optionalFields as $field) {
-            $this->isNull($field);
-            $this->assertArrayHasKey($field, (array) $response);
-        }
+        $response = $cepProvider->get('12345678');
+        $originalProviderResponse = $cepProvider->getOriginalProviderResponse();
+
+        $this->assertNull($response);
+        $this->assertNull($originalProviderResponse);
     }
 
     /**
@@ -74,9 +90,9 @@ class ViaCepProviderTest extends TestCase
      */
     public function testValidatesWhenAnInvalidZipCepIsReceived()
     {
-        $cep            = '66666666';
-        $apiCepProvider = new ViaCep();
-        $response       = $apiCepProvider->get($cep);
+        $cep = '66666666';
+        $cepProvider = new ViaCep();
+        $response = $cepProvider->get($cep);
 
         $this->assertNull($response);
     }

@@ -3,17 +3,40 @@
 namespace LSNepomuceno\LaravelBrazilianCeps\Tests\Feature;
 
 use Exception;
+use Illuminate\Support\Facades\Http;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\Pagarme;
 use LSNepomuceno\LaravelBrazilianCeps\Entities\CepEntity;
-use LSNepomuceno\LaravelBrazilianCeps\Tests\Helpers\DefaultValues;
-use LSNepomuceno\LaravelBrazilianCeps\Tests\TestCase;
+use LSNepomuceno\LaravelBrazilianCeps\Tests\HttpTestCase;
 
-class PagarmeCepProviderTest extends TestCase
+class PagarmeCepProviderTest extends HttpTestCase
 {
+    protected Pagarme $cepProvider;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->cepProvider = new Pagarme();
+    }
+
     public function testValidatesCepProviderName()
     {
-        $apiCepProvider = new Pagarme();
-        $this->assertEquals('Pagarme', $apiCepProvider->getProviderName());
+        $cepProvider = new Pagarme();
+        $this->assertEquals('Pagarme', $cepProvider->getProviderName());
+    }
+
+    private function mockResponseSuccess(): void
+    {
+        $mockResponse = [
+            'city' => $this->faker->city(),
+            'zipcode' => $this->faker->postcode(),
+            'street' => $this->faker->streetName(),
+            'state' => $this->faker->stateAbbr(),
+            'neighborhood' => $this->faker->name()
+        ];
+
+        Http::fake([
+            "{$this->cepProvider->getBaseUrl()}*" => Http::response($mockResponse, 200)
+        ]);
     }
 
     /**
@@ -21,52 +44,44 @@ class PagarmeCepProviderTest extends TestCase
      */
     public function testValidatesOriginalResponseStructure()
     {
-        $cep            = '29018-210';
-        $apiCepProvider = new Pagarme();
-        $apiCepProvider->get($cep);
+        $this->mockResponseSuccess();
 
-        $originalProviderResponse = $apiCepProvider->getOriginalProviderResponse();
-
-        $requiredFields = [
-            'zipcode',
-            'state',
-            'city',
-            'neighborhood',
-            'street'
-        ];
-
-        foreach ($requiredFields as $field) {
-            $this->assertNotEmpty($field);
-            $this->assertArrayHasKey($field, (array) $originalProviderResponse);
-        }
+        $cepProvider = new Pagarme();
+        $response = $cepProvider->get($this->faker->postcode());
+        $originalProviderResponse = $cepProvider->getOriginalProviderResponse();
+        $this->assertInstanceOf(CepEntity::class, $response);
+        $this->assertNotEmpty($originalProviderResponse);
     }
 
     /**
      * @throws Exception
-     * @depends testValidatesOriginalResponseStructure
      */
     public function testValidatesIfTheRequestWillBeExecutedSuccessfully()
     {
-        $cep            = '29018-210';
-        $apiCepProvider = new Pagarme();
-        $response       = $apiCepProvider->get($cep);
+        $this->mockResponseSuccess();
 
-        $requiredFields = DefaultValues::successfullyRequiredFields();
-        $optionalFields = DefaultValues::optionalFields();
+        $cepProvider = new Pagarme();
+        $response = $cepProvider->get($this->faker->postcode());
 
         $this->assertIsObject($response);
-
         $this->assertInstanceOf(CepEntity::class, $response);
+        $this->assertRequiredFields($response);
+        $this->assertOptionalFields($response);
+    }
 
-        foreach ($requiredFields as $field) {
-            $this->assertNotEmpty($field);
-            $this->assertArrayHasKey($field, (array) $response);
-        }
+    /**
+     * @throws Exception
+     */
+    public function testValidatesOriginalResponseStructureError()
+    {
+        $this->mockErrorResponse($this->cepProvider->getBaseUrl());
+        $cepProvider = new Pagarme();
 
-        foreach ($optionalFields as $field) {
-            $this->isNull($field);
-            $this->assertArrayHasKey($field, (array) $response);
-        }
+        $response = $cepProvider->get('12345678');
+        $originalProviderResponse = $cepProvider->getOriginalProviderResponse();
+
+        $this->assertNull($response);
+        $this->assertNull($originalProviderResponse);
     }
 
     /**
@@ -74,9 +89,9 @@ class PagarmeCepProviderTest extends TestCase
      */
     public function testValidatesWhenAnInvalidZipCepIsReceived()
     {
-        $cep            = '66666666';
-        $apiCepProvider = new Pagarme();
-        $response       = $apiCepProvider->get($cep);
+        $cep = '66666666';
+        $cepProvider = new Pagarme();
+        $response = $cepProvider->get($cep);
 
         $this->assertNull($response);
     }

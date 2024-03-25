@@ -27,7 +27,7 @@ class BrasilApiV1 extends BaseCepProvider
     public function get(string $cep): ?CepEntity
     {
         try {
-            $data = $this->client->get("{$this->formatCep($cep)}.json")
+            $data = $this->client->get($this->formatCep($cep))
                                  ->object();
 
             $this->setOriginalProviderResponse($data);
@@ -47,5 +47,10 @@ class BrasilApiV1 extends BaseCepProvider
         } catch (Exception $e) {
             return null;
         }
+    }
+
+    public function getBaseUrl(): string
+    {
+        return self::BASE_URL;
     }
 }

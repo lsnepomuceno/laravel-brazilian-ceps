@@ -11,19 +11,25 @@ permissions:
 
 jobs:
   run:
-    name: Run
     runs-on: ${{ matrix.operating-system }}
     strategy:
       fail-fast: false
       matrix:
         operating-system: [ ubuntu-latest ]
         php-versions: [ '8.1', '8.2', '8.3' ]
+        laravel: [ '10.*','9.*' ]
+        include:
+          - laravel:  10.*
+            testbench: 8.*
+          - laravel:  9.*
+            testbench: 7.*
     env:
       extensions: mbstring, dom, fileinfo, openssl, json, imagick, swoole, sqlite3
       key: cache-v5
+    name: PHP ${{ matrix.php-versions }} - Laravel ${{ matrix.laravel }} - ${{ matrix.operating-system}}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup cache environment
         id: cache-env
@@ -34,7 +40,7 @@ jobs:
           key: ${{ env.key }}
 
       - name: Cache extensions
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.cache-env.outputs.dir }}
           key: ${{ steps.cache-env.outputs.key }}
@@ -46,6 +52,11 @@ jobs:
           php-version: ${{ matrix.php-versions }}
         env:
           update: true
+
+      - name: Install Laravel Dependencies
+        run: |
+          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer update --prefer-dist --no-interaction --no-suggest
 
       - name: Testing PHP version
         run: |
@@ -63,7 +74,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+          composer update -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
       - name: Execute tests
         run: |

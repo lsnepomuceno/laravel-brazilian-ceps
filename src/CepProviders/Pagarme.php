@@ -47,4 +47,9 @@ class Pagarme extends BaseCepProvider
             return null;
         }
     }
+
+    public function getBaseUrl(): string
+    {
+        return self::BASE_URL;
+    }
 }
