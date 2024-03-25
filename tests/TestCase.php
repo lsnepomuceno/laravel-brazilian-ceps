@@ -33,7 +33,9 @@ class TestCase extends Orchestra
 
     protected function defineDatabaseMigrations(): void
     {
-        Artisan::call('make:cache-table');
+        if ((int) app()->version() >= 11) {
+            Artisan::call('make:cache-table');
+        }
         Artisan::call('migrate');
     }
 }
