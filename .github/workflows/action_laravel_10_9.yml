@@ -17,10 +17,8 @@ jobs:
       matrix:
         operating-system: [ ubuntu-latest ]
         php-versions: [ '8.1', '8.2', '8.3' ]
-        laravel: [ '11.*','10.*','9.*' ]
+        laravel: [ '10.*','9.*' ]
         include:
-          - laravel:  11.*
-            testbench: 9.*
           - laravel:  10.*
             testbench: 8.*
           - laravel:  9.*
@@ -28,7 +26,7 @@ jobs:
     env:
       extensions: mbstring, dom, fileinfo, openssl, json, imagick, swoole, sqlite3
       key: cache-v5
-    name: PHP ${{ matrix.php-versions }} - Laravel ${{ matrix.laravel-version }} - ${{ matrix.operating-system}}
+    name: PHP ${{ matrix.php-versions }} - Laravel ${{ matrix.laravel }} - ${{ matrix.operating-system}}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
