@@ -48,4 +48,9 @@ class ApiCep extends BaseCepProvider
             return null;
         }
     }
+
+    public function getBaseUrl(): string
+    {
+        return self::BASE_URL;
+    }
 }

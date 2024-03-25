@@ -49,4 +49,9 @@ class ViaCep extends BaseCepProvider
             return null;
         }
     }
+
+    public function getBaseUrl(): string
+    {
+        return self::BASE_URL;
+    }
 }

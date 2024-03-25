@@ -17,11 +17,16 @@ jobs:
       matrix:
         operating-system: [ ubuntu-latest ]
         php-versions: [ '8.1', '8.2', '8.3' ]
-        laravel-version: [ '11.*','10.*','9.*' ]
+        laravel: [ '10.*','9.*' ]
+        include:
+          - laravel:  10.*
+            testbench: 8.*
+          - laravel:  9.*
+            testbench: 7.*
     env:
       extensions: mbstring, dom, fileinfo, openssl, json, imagick, swoole, sqlite3
       key: cache-v5
-    name: PHP ${{ matrix.php-versions }} - Laravel ${{ matrix.laravel-version }} - ${{ matrix.operating-system}}
+    name: PHP ${{ matrix.php-versions }} - Laravel ${{ matrix.laravel }} - ${{ matrix.operating-system}}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -47,6 +52,11 @@ jobs:
           php-version: ${{ matrix.php-versions }}
         env:
           update: true
+
+      - name: Install Laravel Dependencies
+        run: |
+          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer update --prefer-dist --no-interaction --no-suggest
 
       - name: Testing PHP version
         run: |
