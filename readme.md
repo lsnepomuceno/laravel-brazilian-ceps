@@ -14,13 +14,13 @@
     <img src="https://poser.pugx.org/lsnepomuceno/laravel-brazilian-ceps/license" alt="License">
   </a>
   <a href="https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/main_action.yml">
-    <img src="https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/action_pr_main.yml/badge.svg?branch=main" alt="Tests">
+    <img src="https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/action_laravel_11.yml/badge.svg?branch=main" alt="Tests">
   </a>
 </p>
 
 # Minimum requirements
 * PHP: ^8.1, ^8.2 or ^8.3
-* Laravel: 9, 10 or newer
+* Laravel: 9, 10 or 11
 * PHP Extensions: fileinfo, mbstring, json
 
 # Install
