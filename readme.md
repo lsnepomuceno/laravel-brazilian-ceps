@@ -2,13 +2,13 @@
 
 <p align="center">
   <a href="https://github.com/lsnepomuceno/laravel-brazilian-ceps/releases/latest">
-    <img src="http://poser.pugx.org/lsnepomuceno/laravel-brazilian-ceps/v" alt="Latest Stable Version">
+    <img src="https://poser.pugx.org/lsnepomuceno/laravel-brazilian-ceps/v" alt="Latest Stable Version">
   </a>
   <a href="https://packagist.org/packages/lsnepomuceno/laravel-brazilian-ceps/stats">
-    <img src="http://poser.pugx.org/lsnepomuceno/laravel-brazilian-ceps/downloads" alt="Total Downloads">
+    <img src="https://poser.pugx.org/lsnepomuceno/laravel-brazilian-ceps/downloads" alt="Total Downloads">
   </a>
   <a href="https://github.com/lsnepomuceno/laravel-brazilian-ceps/tree/dev">
-    <img src="http://poser.pugx.org/lsnepomuceno/laravel-brazilian-ceps/v/unstable" alt="Latest Unstable Version">
+    <img src="https://poser.pugx.org/lsnepomuceno/laravel-brazilian-ceps/v/unstable" alt="Latest Unstable Version">
   </a>
   <a href="https://github.com/lsnepomuceno/laravel-brazilian-ceps/blob/main/LICENSE.md">
     <img src="https://poser.pugx.org/lsnepomuceno/laravel-brazilian-ceps/license" alt="License">
