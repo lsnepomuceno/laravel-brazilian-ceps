@@ -20,8 +20,8 @@
         "ext-json": "*",
         "ext-fileinfo": "*",
         "ext-mbstring": "*",
-        "illuminate/support": "^9 || ^10 || ^11",
-        "illuminate/http": "^9 || ^10 || ^11",
+        "illuminate/support": "^10 || ^11",
+        "illuminate/http": "^10 || ^11",
         "guzzlehttp/guzzle": "^7"
     },
     "autoload": {
@@ -35,7 +35,7 @@
         }
     },
     "scripts": {
-        "test": "vendor/bin/testbench package:test"
+        "test": "vendor/bin/pest --parallel --processes=10"
     },
     "extra": {
         "laravel": {
@@ -48,7 +48,13 @@
         "lsnepomuceno/laravel-a1-pdf-sign": "Sign PDF files with valid x509 certificates."
     },
     "require-dev": {
-        "orchestra/testbench": "^7 || ^8 || ^9",
-        "nunomaduro/collision": "^6 || ^7 || ^8"
+        "orchestra/testbench": "^8 || ^9",
+        "nunomaduro/collision": "^7 || ^8",
+        "pestphp/pest": "^2.35"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     }
 }

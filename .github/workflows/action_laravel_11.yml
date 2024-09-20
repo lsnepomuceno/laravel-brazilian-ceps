@@ -76,4 +76,4 @@ jobs:
 
       - name: Execute tests
         run: |
-          vendor/bin/testbench package:test
+          composer run test
