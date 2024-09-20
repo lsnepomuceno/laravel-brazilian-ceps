@@ -20,7 +20,7 @@
 
 # Minimum requirements
 * PHP: ^8.1, ^8.2 or ^8.3
-* Laravel: 9, 10 or 11
+* Laravel: 10 or 11
 * PHP Extensions: fileinfo, mbstring, json
 
 # Install
