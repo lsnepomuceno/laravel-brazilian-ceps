@@ -28,6 +28,7 @@ class TestCase extends Orchestra
 
     protected function defineEnvironment($app): void
     {
+        $app['config']->set('app.env', 'testing');
         $app['config']->set('database.default', 'testing');
     }
 

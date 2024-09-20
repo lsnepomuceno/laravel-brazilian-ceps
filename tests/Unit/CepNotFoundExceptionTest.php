@@ -2,23 +2,17 @@
 
 namespace LSNepomuceno\LaravelBrazilianCeps\Tests\Unit;
 
+use Illuminate\Support\Facades\Http;
 use LSNepomuceno\LaravelBrazilianCeps\Exceptions\CepNotFoundException;
 use LSNepomuceno\LaravelBrazilianCeps\Services\CepService;
-use LSNepomuceno\LaravelBrazilianCeps\Tests\TestCase;
 
-class CepNotFoundExceptionTest extends TestCase
-{
-    /**
-     * @throws CepNotFoundException
-     */
-    public function testValidateCepNotFoundException()
-    {
-        $this->expectException(CepNotFoundException::class);
-        
-        config(['brazilian-ceps.throw_not_found_exception' => true]);
+test('valida exceção CepNotFoundException', function () {
+    Http::fake([
+        "*" => Http::response([], 404)
+    ]);
 
-        $cepService = new CepService();
+    config(['brazilian-ceps.throw_not_found_exception' => true]);
 
-        $cepService->get('66666666');
-    }
-}
+    expect(fn() => (new CepService())->get('66666666'))
+        ->toThrow(CepNotFoundException::class);
+});
