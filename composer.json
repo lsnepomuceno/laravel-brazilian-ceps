@@ -35,7 +35,7 @@
         }
     },
     "scripts": {
-        "test": "vendor/bin/testbench package:test"
+        "test": "vendor/bin/pest --parallel --processes=10"
     },
     "extra": {
         "laravel": {
