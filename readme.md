@@ -190,7 +190,7 @@ class ExampleController() {
 
 #### To ensure the delivery of data, several public providers are used, with this, the need to standardize and apply tests for better code quality was seen. About 70+ tests are included in the package.
 
-#### Tests can be verified through the badge [![tests badge](https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/action_pr_main.yml/badge.svg?branch=main)](https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/main_action.yml)
+#### Tests can be verified through the badge [![tests badge](https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/action_laravel_11.yml/badge.svg?branch=main)](https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/main_action.yml)
 
 
 ## License
