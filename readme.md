@@ -13,14 +13,14 @@
   <a href="https://github.com/lsnepomuceno/laravel-brazilian-ceps/blob/main/LICENSE.md">
     <img src="https://poser.pugx.org/lsnepomuceno/laravel-brazilian-ceps/license" alt="License">
   </a>
-  <a href="https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/main_action.yml">
-    <img src="https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/action_laravel_11.yml/badge.svg?branch=main" alt="Tests">
+  <a href="https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/action_laravel.yml">
+    <img src="https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/action_laravel.yml/badge.svg?branch=main" alt="Tests">
   </a>
 </p>
 
 # Minimum requirements
-* PHP: ^8.1, ^8.2, ^8.3 ^8.4
-* Laravel: 9, 10, 11 or 12
+* PHP: ^8.1, ^8.2, ^8.3, ^8.4, ^8.5
+* Laravel: 9, 10, 11, 12 or 13
 * PHP Extensions: fileinfo, mbstring, json
 
 # Install
@@ -190,7 +190,7 @@ class ExampleController() {
 
 #### To ensure the delivery of data, several public providers are used, with this, the need to standardize and apply tests for better code quality was seen. About 70+ tests are included in the package.
 
-#### Tests can be verified through the badge [![tests badge](https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/action_laravel_11.yml/badge.svg?branch=main)](https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/main_action.yml)
+#### Tests can be verified through the badge [![tests badge](https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/action_laravel.yml/badge.svg?branch=main)](https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/action_laravel.yml)
 
 
 ## License
