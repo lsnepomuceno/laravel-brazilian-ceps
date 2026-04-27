@@ -1,9 +1,12 @@
 name: Laravel Brazilian Ceps
-
+ 
 on:
   pull_request:
     branches: [ main, dev, v1.x-dev ]
-
+ 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+ 
 permissions:
   contents: read
 
