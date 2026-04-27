@@ -1,9 +1,12 @@
 name: Laravel Brazilian Ceps
-
+ 
 on:
   pull_request:
     branches: [ main, dev, v1.x-dev ]
-
+ 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+ 
 permissions:
   contents: read
 
@@ -15,12 +18,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Laravel 9 supports PHP 8.1–8.2
-          - php: 8.1
-            laravel: 9.*
-          - php: 8.2
-            laravel: 9.*
-
           # Laravel 10 supports PHP 8.1–8.3
           - php: 8.1
             laravel: 10.*
@@ -37,19 +34,29 @@ jobs:
           - php: 8.4
             laravel: 11.*
 
-          # Laravel 12 supports PHP 8.2–8.4
+          # Laravel 12 supports PHP 8.2–8.5
           - php: 8.2
             laravel: 12.*
           - php: 8.3
             laravel: 12.*
           - php: 8.4
             laravel: 12.*
+          - php: 8.5
+            laravel: 12.*
+
+          # Laravel 13 supports PHP 8.3–8.5
+          - php: 8.3
+            laravel: 13.*
+          - php: 8.4
+            laravel: 13.*
+          - php: 8.5
+            laravel: 13.*
 
     name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2

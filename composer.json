@@ -16,12 +16,12 @@
         }
     ],
     "require": {
-        "php": ">=8.1 <8.5",
+        "php": ">=8.1 <8.6",
         "ext-json": "*",
         "ext-fileinfo": "*",
         "ext-mbstring": "*",
-        "illuminate/support": "^9 || ^10 || ^11 || ^12",
-        "illuminate/http": "^9 || ^10 || ^11 || ^12",
+        "illuminate/support": "^10 || ^11 || ^12 || ^13",
+        "illuminate/http": "^10 || ^11 || ^12 || ^13",
         "guzzlehttp/guzzle": "^7"
     },
     "autoload": {
@@ -48,7 +48,7 @@
         "lsnepomuceno/laravel-a1-pdf-sign": "Sign PDF files with valid x509 certificates."
     },
     "require-dev": {
-        "orchestra/testbench": "^7 || ^8 || ^9 || ^10",
+        "orchestra/testbench": "^8 || ^9 || ^10 || ^11",
         "nunomaduro/collision": "^6 || ^7 || ^8"
     },
     "config": {
