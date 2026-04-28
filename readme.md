@@ -14,7 +14,7 @@
     <img src="https://poser.pugx.org/lsnepomuceno/laravel-brazilian-ceps/license" alt="License">
   </a>
   <a href="https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/action_laravel.yml">
-    <img src="https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/action_laravel.yml/badge.svg?branch=main" alt="Tests">
+    <img src="https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/action_laravel.yml/badge.svg" alt="Tests">
   </a>
 </p>
 
