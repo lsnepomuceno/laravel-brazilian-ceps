@@ -2,16 +2,19 @@
 
 namespace LSNepomuceno\LaravelBrazilianCeps\Services;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Traits\Conditionable;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\ApiCep;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\BrasilApiV1;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\BrasilApiV2;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\OpenCep;
+use LSNepomuceno\LaravelBrazilianCeps\CepProviders\OpenStreetMap;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\Pagarme;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\Postomon;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\ViaCep;
 use Lsnepomuceno\LaravelBrazilianCeps\Contracts\ConsultableCEPProvider;
+use LSNepomuceno\LaravelBrazilianCeps\Contracts\SearchableCEPProvider;
 use LSNepomuceno\LaravelBrazilianCeps\Entities\CepEntity;
 use LSNepomuceno\LaravelBrazilianCeps\Exceptions\CepNotFoundException;
 use LSNepomuceno\LaravelBrazilianCeps\Helpers\MaskHelper;
@@ -29,7 +32,8 @@ class CepService
             ApiCep::class,
             Postomon::class,
             BrasilApiV1::class,
-            BrasilApiV2::class
+            BrasilApiV2::class,
+            OpenStreetMap::class,
         ]
     )
     {
@@ -51,6 +55,20 @@ class CepService
         }
 
         return $this->processCep($cep);
+    }
+
+    public function search(string $uf, string $city, string $street): Collection
+    {
+        $results = collect();
+
+        foreach ($this->cepApis as $cepApi) {
+            $provider = new $cepApi;
+            if ($provider instanceof SearchableCEPProvider) {
+                $results = $results->merge($provider->search($uf, $city, $street));
+            }
+        }
+
+        return $results->unique('cep')->values();
     }
 
     /**

@@ -226,6 +226,51 @@ public function messages(): array
 
 <hr>
 
+## Address Search (Reverse Lookup)
+
+##### The package provides a `search()` method to find CEPs by address components — the reverse of a regular CEP lookup. Multiple providers are queried in parallel and results are deduplicated by CEP code.
+
+##### Providers that support address search:
+- **ViaCEP** — structured search by UF, city, and street
+- **OpenStreetMap (Nominatim)** — free global geocoding also added as a CEP provider fallback
+
+```PHP
+<?php
+
+use LSNepomuceno\LaravelBrazilianCeps\Facades\CEP;
+
+// Returns a Collection of CepEntity
+$addresses = CEP::search(uf: 'SP', city: 'São Paulo', street: 'Paulista');
+
+foreach ($addresses as $address) {
+    echo "{$address->cep} — {$address->street}, {$address->neighborhood}";
+}
+```
+
+#### :exclamation: You can also inject `CepService` directly:
+
+```PHP
+<?php
+
+use LSNepomuceno\LaravelBrazilianCeps\Services\CepService;
+
+class AddressController
+{
+    public function __construct(protected CepService $cepService) { }
+
+    public function search(string $uf, string $city, string $street)
+    {
+        $results = $this->cepService->search($uf, $city, $street);
+
+        return $results->toArray();
+    }
+}
+```
+
+#### :exclamation: The `street` parameter requires at least 3 characters (ViaCEP restriction). Results are returned as a `Collection<CepEntity>` and are not cached.
+
+<hr>
+
 ## Cache Results
 
 #### By default, the results cache are cached and have a lifetime of 30 days, if you need to disable or change the lifetime, just update the configuration variables, as described below.
