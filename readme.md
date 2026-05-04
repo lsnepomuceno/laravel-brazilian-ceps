@@ -243,9 +243,9 @@ public function messages(): array
 
 ## Tests
 
-#### To ensure the delivery of data, several public providers are used, with this, the need to standardize and apply tests for better code quality was seen. About 70+ tests are included in the package.
+#### To ensure the delivery of data, several public providers are used, with this, the need to standardize and apply tests for better code quality was seen. About 90+ tests are included in the package.
 
-#### Tests can be verified through the badge [![tests badge](https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/action_laravel.yml/badge.svg?branch=main)](https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/action_laravel.yml)
+#### Tests can be verified through the badge [![tests badge](https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/action_laravel.yml/badge.svg)](https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/action_laravel.yml)
 
 
 ## License
