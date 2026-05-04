@@ -171,6 +171,61 @@ class ExampleController() {
 
 <hr>
 
+## Validation Rule
+
+##### The package provides a `ValidCep` rule that integrates with Laravel's validation system to validate Brazilian CEP format and, optionally, verify that the CEP actually exists.
+
+### Format validation only:
+
+```PHP
+<?php
+
+use LSNepomuceno\LaravelBrazilianCeps\Rules\ValidCep;
+
+class AddressRequest extends FormRequest
+{
+    public function rules(): array
+    {
+        return [
+            'cep' => ['required', 'string', new ValidCep],
+        ];
+    }
+}
+```
+
+### Format + existence check:
+
+#### Using the `mustExist()` method causes the rule to query the CEP providers to confirm the address exists. This performs an external HTTP request (subject to caching).
+
+```PHP
+<?php
+
+use LSNepomuceno\LaravelBrazilianCeps\Rules\ValidCep;
+
+class AddressRequest extends FormRequest
+{
+    public function rules(): array
+    {
+        return [
+            'cep' => ['required', 'string', (new ValidCep)->mustExist()],
+        ];
+    }
+}
+```
+
+#### :exclamation: When validation fails, the rule returns Portuguese error messages by default. You can override them via the `messages()` method in your Form Request:
+
+```PHP
+public function messages(): array
+{
+    return [
+        'cep.valid_cep' => 'The zip code is invalid.',
+    ];
+}
+```
+
+<hr>
+
 ## Cache Results
 
 #### By default, the results cache are cached and have a lifetime of 30 days, if you need to disable or change the lifetime, just update the configuration variables, as described below.
@@ -188,9 +243,9 @@ class ExampleController() {
 
 ## Tests
 
-#### To ensure the delivery of data, several public providers are used, with this, the need to standardize and apply tests for better code quality was seen. About 70+ tests are included in the package.
+#### To ensure the delivery of data, several public providers are used, with this, the need to standardize and apply tests for better code quality was seen. About 90+ tests are included in the package.
 
-#### Tests can be verified through the badge [![tests badge](https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/action_laravel.yml/badge.svg?branch=main)](https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/action_laravel.yml)
+#### Tests can be verified through the badge [![tests badge](https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/action_laravel.yml/badge.svg)](https://github.com/lsnepomuceno/laravel-brazilian-ceps/actions/workflows/action_laravel.yml)
 
 
 ## License
