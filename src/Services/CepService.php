@@ -2,17 +2,23 @@
 
 namespace LSNepomuceno\LaravelBrazilianCeps\Services;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Traits\Conditionable;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\ApiCep;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\BrasilApiV1;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\BrasilApiV2;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\OpenCep;
+use LSNepomuceno\LaravelBrazilianCeps\CepProviders\OpenStreetMap;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\Pagarme;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\Postomon;
 use LSNepomuceno\LaravelBrazilianCeps\CepProviders\ViaCep;
 use Lsnepomuceno\LaravelBrazilianCeps\Contracts\ConsultableCEPProvider;
+use LSNepomuceno\LaravelBrazilianCeps\Contracts\SearchableCEPProvider;
 use LSNepomuceno\LaravelBrazilianCeps\Entities\CepEntity;
+use LSNepomuceno\LaravelBrazilianCeps\Events\CepFound;
+use LSNepomuceno\LaravelBrazilianCeps\Events\CepNotFound;
+use LSNepomuceno\LaravelBrazilianCeps\Events\CepQueried;
 use LSNepomuceno\LaravelBrazilianCeps\Exceptions\CepNotFoundException;
 use LSNepomuceno\LaravelBrazilianCeps\Helpers\MaskHelper;
 
@@ -29,7 +35,8 @@ class CepService
             ApiCep::class,
             Postomon::class,
             BrasilApiV1::class,
-            BrasilApiV2::class
+            BrasilApiV2::class,
+            OpenStreetMap::class,
         ]
     )
     {
@@ -40,17 +47,34 @@ class CepService
      */
     public function get(string $cep): ?CepEntity
     {
+        CepQueried::dispatch($cep);
+
         $hasCacheResultsEnabled = config('brazilian-ceps.cache_results', true);
         $cacheResultsLifetime   = config('brazilian-ceps.cache_lifetime_in_days', 30);
 
-        if ($hasCacheResultsEnabled) {
-            return Cache::remember(
-                "cep:{$cep}",
-                now()->addDays($cacheResultsLifetime),
-                fn() => $this->processCep($cep));
+        $entity = $hasCacheResultsEnabled
+            ? Cache::remember("cep:{$cep}", now()->addDays($cacheResultsLifetime), fn () => $this->processCep($cep))
+            : $this->processCep($cep);
+
+        $entity
+            ? CepFound::dispatch($cep, $entity)
+            : CepNotFound::dispatch($cep);
+
+        return $entity;
+    }
+
+    public function search(string $uf, string $city, string $street): Collection
+    {
+        $results = collect();
+
+        foreach ($this->cepApis as $cepApi) {
+            $provider = new $cepApi;
+            if ($provider instanceof SearchableCEPProvider) {
+                $results = $results->merge($provider->search($uf, $city, $street));
+            }
         }
 
-        return $this->processCep($cep);
+        return $results->unique('cep')->values();
     }
 
     /**
