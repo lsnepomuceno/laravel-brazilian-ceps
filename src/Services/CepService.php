@@ -16,6 +16,9 @@ use LSNepomuceno\LaravelBrazilianCeps\CepProviders\ViaCep;
 use Lsnepomuceno\LaravelBrazilianCeps\Contracts\ConsultableCEPProvider;
 use LSNepomuceno\LaravelBrazilianCeps\Contracts\SearchableCEPProvider;
 use LSNepomuceno\LaravelBrazilianCeps\Entities\CepEntity;
+use LSNepomuceno\LaravelBrazilianCeps\Events\CepFound;
+use LSNepomuceno\LaravelBrazilianCeps\Events\CepNotFound;
+use LSNepomuceno\LaravelBrazilianCeps\Events\CepQueried;
 use LSNepomuceno\LaravelBrazilianCeps\Exceptions\CepNotFoundException;
 use LSNepomuceno\LaravelBrazilianCeps\Helpers\MaskHelper;
 
@@ -44,17 +47,20 @@ class CepService
      */
     public function get(string $cep): ?CepEntity
     {
+        CepQueried::dispatch($cep);
+
         $hasCacheResultsEnabled = config('brazilian-ceps.cache_results', true);
         $cacheResultsLifetime   = config('brazilian-ceps.cache_lifetime_in_days', 30);
 
-        if ($hasCacheResultsEnabled) {
-            return Cache::remember(
-                "cep:{$cep}",
-                now()->addDays($cacheResultsLifetime),
-                fn() => $this->processCep($cep));
-        }
+        $entity = $hasCacheResultsEnabled
+            ? Cache::remember("cep:{$cep}", now()->addDays($cacheResultsLifetime), fn () => $this->processCep($cep))
+            : $this->processCep($cep);
 
-        return $this->processCep($cep);
+        $entity
+            ? CepFound::dispatch($cep, $entity)
+            : CepNotFound::dispatch($cep);
+
+        return $entity;
     }
 
     public function search(string $uf, string $city, string $street): Collection

@@ -271,6 +271,44 @@ class AddressController
 
 <hr>
 
+## Events
+
+##### The package dispatches Laravel events on every CEP lookup, enabling listeners for logging, monitoring, analytics, or any custom behavior without modifying the core service.
+
+| Event | When |
+|---|---|
+| `CepQueried` | Fired at the start of every `get()` call, before any provider is contacted |
+| `CepFound` | Fired when a provider successfully resolves the CEP |
+| `CepNotFound` | Fired when all providers fail to find the CEP |
+
+### Listening to events:
+
+```PHP
+<?php
+
+use LSNepomuceno\LaravelBrazilianCeps\Events\CepFound;
+use LSNepomuceno\LaravelBrazilianCeps\Events\CepNotFound;
+use LSNepomuceno\LaravelBrazilianCeps\Events\CepQueried;
+
+// In your EventServiceProvider or using the #[AsEventListener] attribute:
+
+Event::listen(CepQueried::class, function (CepQueried $event) {
+    Log::info("CEP lookup started: {$event->cep}");
+});
+
+Event::listen(CepFound::class, function (CepFound $event) {
+    Log::info("CEP found: {$event->cep}", $event->entity->toArray());
+});
+
+Event::listen(CepNotFound::class, function (CepNotFound $event) {
+    Log::warning("CEP not found: {$event->cep}");
+});
+```
+
+#### :exclamation: All events are read-only — their properties are declared `readonly`. `CepFound` carries the resolved `CepEntity` via `$event->entity`.
+
+<hr>
+
 ## Cache Results
 
 #### By default, the results cache are cached and have a lifetime of 30 days, if you need to disable or change the lifetime, just update the configuration variables, as described below.
