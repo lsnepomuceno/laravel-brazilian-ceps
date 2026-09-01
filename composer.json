@@ -22,7 +22,7 @@
         "ext-mbstring": "*",
         "illuminate/support": "^10 || ^11 || ^12 || ^13",
         "illuminate/http": "^10 || ^11 || ^12 || ^13",
-        "guzzlehttp/guzzle": "^7"
+        "guzzlehttp/guzzle": "^8"
     },
     "autoload": {
         "psr-4": {
